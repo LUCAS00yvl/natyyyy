@@ -1,7 +1,5 @@
 /* ================= BASE ================= */
-* {
-    box-sizing: border-box; 
-}
+* { box-sizing: border-box; }
 
 :root {
     --box-color-primary: #e63946; --box-color-darker: #c92c3a;
@@ -37,41 +35,49 @@ body { overflow-y: hidden; }
 .fade-in-section { opacity: 0; transform: translateY(50px); transition: opacity 1s ease-out, transform 1s ease-out; margin: 10vh 0; }
 .fade-in-section.visible { opacity: 1; transform: translateY(0); }
 
-/* ================= NOVOS COMPONENTES (IDEIAS 1 E 2) ================= */
-
-/* Ideia 1: Calendário da Semana */
-.calendar-grid { display: flex; gap: 15px; flex-wrap: wrap; justify-content: center; max-width: 700px; }
-.calendar-door { 
-    width: 80px; height: 100px; cursor: pointer; position: relative; 
-    perspective: 1000px; transition: transform 0.5s; 
+/* ================= EFEITO FUNDO: CHUVA DE "EU TE AMO" ================= */
+#floating-words-container {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100vh;
+    pointer-events: none; z-index: 0; overflow: hidden;
 }
-.calendar-door .front, .calendar-door .back { 
-    position: absolute; width: 100%; height: 100%; backface-visibility: hidden; 
-    display: flex; align-items: center; justify-content: center; border-radius: 8px; 
-    transition: transform 0.6s cubic-bezier(0.4, 0.2, 0.2, 1); box-shadow: 0 4px 8px rgba(0,0,0,0.3); 
-    padding: 5px; text-align: center; 
+.floating-word {
+    position: absolute; color: rgba(255, 255, 255, 0.05); font-weight: bold;
+    white-space: nowrap; animation: floatUp linear infinite;
 }
-.calendar-door .front { background: #d62828; border: 2px dashed #ffb3b3; font-size: 1.2rem; font-weight: bold; color: white; }
-.calendar-door .back { background: #fff; color: #d62828; transform: rotateY(180deg); font-size: 0.75rem; border: 2px solid #d62828; font-weight: bold; }
-.calendar-door.open .front { transform: rotateY(180deg); }
-.calendar-door.open .back { transform: rotateY(0deg); }
-.calendar-door.locked { opacity: 0.6; filter: grayscale(80%); cursor: not-allowed; }
-
-/* Ideia 2: Quebra-Cabeças Deslizante */
-.puzzle-board { 
-    width: 300px; height: 300px; display: grid; 
-    grid-template-columns: repeat(3, 100px); grid-template-rows: repeat(3, 100px); 
-    border: 4px solid #fff; box-shadow: 0 10px 20px rgba(0,0,0,0.6); background: #111; gap: 2px; 
+@keyframes floatUp {
+    0% { transform: translateY(100vh) rotate(-10deg); opacity: 0; }
+    10% { opacity: 1; }
+    90% { opacity: 1; }
+    100% { transform: translateY(-100px) rotate(10deg); opacity: 0; }
 }
-.puzzle-piece { 
-    width: 100%; height: 100%; 
-    background-image: url('https://via.placeholder.com/300x300/e63946/ffffff?text=Nossa+Foto'); 
-    background-size: 300px 300px; cursor: pointer; transition: transform 0.1s; 
+
+/* ================= MÁQUINA POLAROID E FLASH ================= */
+.camera-btn { 
+    font-size: 4rem; color: #333; background: #fff; border-radius: 50%; 
+    width: 100px; height: 100px; display: flex; align-items: center; justify-content: center; 
+    cursor: pointer; box-shadow: 0 10px 20px rgba(0,0,0,0.5); transition: transform 0.2s; z-index: 10; 
 }
-.puzzle-empty { background: transparent !important; cursor: default; border: 1px dashed #444; }
+.camera-btn:hover { transform: scale(1.1); }
+.camera-flash { 
+    position: fixed; top: 0; left: 0; width: 100%; height: 100vh; 
+    background: white; z-index: 9999; opacity: 0; pointer-events: none; transition: opacity 0.5s; 
+}
+.camera-flash.flash-active { opacity: 1; transition: opacity 0.05s; }
+.polaroid-frame { 
+    position: absolute; top: 50%; left: 50%; 
+    transform: translate(-50%, -50%) scale(0) translateY(-100px); 
+    width: 240px; background: white; padding: 15px 15px 40px 15px; 
+    box-shadow: 0 15px 30px rgba(0,0,0,0.8); z-index: 15; 
+    transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275); border-radius: 2px; 
+}
+.polaroid-frame img { width: 100%; height: auto; border: 1px solid #ccc; filter: sepia(0.2) contrast(1.1); }
+.polaroid-caption { 
+    font-family: 'Comic Sans MS', cursive, sans-serif; color: #333; 
+    text-align: center; margin-top: 15px; font-weight: bold; transform: rotate(-2deg); 
+}
+.polaroid-frame.show { transform: translate(-50%, -50%) scale(1) rotate(5deg) translateY(0); }
 
-
-/* ================= RESTANTE CSS ================= */
+/* ================= COMPONENTES ORIGINAIS ================= */
 .quest-board { background: #c19a6b; background-image: url('https://www.transparenttextures.com/patterns/cork-board.png'); border: 8px solid #5c4033; }
 .quest-card { background-color: #ffffe0; border-radius: 2px; font-family: 'Comic Sans MS', cursive, sans-serif; transform: rotate(-2deg); transition: transform 0.2s; }
 .quest-card:nth-child(even) { transform: rotate(3deg); }
@@ -159,7 +165,7 @@ body { overflow-y: hidden; }
 
 .mc-inventory-wrapper { display: flex; justify-content: center; margin-top: 20px; }
 .mc-inventory { display: grid; grid-template-columns: repeat(3, 80px); gap: 4px; background-color: #c6c6c6; padding: 15px; border: 4px solid; border-color: #ffffff #555555 #555555 #ffffff; }
-.mc-slot { width: 80px; height: 80px; background-color: #8b8b8b; border: 4px solid; border-color: #373737 #ffffff #ffffff #373737; position: relative; cursor: pointer; display: flex; justify-content: center; align-items: center; }
+.mc-slot { width: 80px; height: 80px; background-color: #8b8b8b; border: 4px solid; border-color: #373737 #ffffff #ffffff #373737; position: relative; cursor: pointer; display: flex; justify-content: center; align-items: center; font-size: 2.5rem; }
 .mc-tooltip { visibility: hidden; background-color: #110022; color: #a020f0; text-shadow: 1px 1px 0 #000; border: 2px solid #3c1482; padding: 5px 10px; border-radius: 4px; position: absolute; bottom: 90px; left: 50%; transform: translateX(-50%); white-space: nowrap; z-index: 10; font-family: monospace; font-size: 14px; opacity: 0; transition: opacity 0.2s; pointer-events: none; }
 .mc-slot:hover .mc-tooltip { visibility: visible; opacity: 1; }
 .mc-slot:hover { background-color: #a0a0a0; }
@@ -198,7 +204,7 @@ body { overflow-y: hidden; }
 @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
 
 .block-game-wrapper { min-height: 350px; display: flex; align-items: center; justify-content: center; }
-.block-blast-grid { display: grid; grid-template-columns: repeat(8, 35px); grid-template-rows: repeat(8, 35px); gap: 2px; background: #1a1a1a; padding: 10px; border-radius: 8px; transition: opacity 0.5s; box-shadow: 0 0 20px rgba(0,0,0,0.8); }
+.block-blast-grid { display: grid; gap: 2px; background: #1a1a1a; padding: 10px; border-radius: 8px; transition: opacity 0.5s; box-shadow: 0 0 20px rgba(0,0,0,0.8); }
 .game-block { width: 100%; height: 100%; border-radius: 4px; cursor: pointer; transition: transform 0.1s, opacity 0.3s; box-shadow: inset 2px 2px 5px rgba(255,255,255,0.3), inset -2px -2px 5px rgba(0,0,0,0.3); }
 .game-block:hover { transform: scale(0.9); }
 .game-block.popped { opacity: 0; pointer-events: none; transform: scale(0); }
@@ -209,7 +215,6 @@ body { overflow-y: hidden; }
 .player-controls { display: flex; align-items: center; }
 .btn-player { background: transparent; border: none; color: white; font-size: 1.2rem; margin: 0 5px; cursor: pointer; transition: color 0.2s; padding: 0; }
 .btn-player:hover { color: #1db954; }
-@media screen and (max-width: 600px) { .floating-player { width: 90%; right: 5%; bottom: 10px; padding: 10px 15px; } }
 
 .parallax-ghibli { background-image: url('https://via.placeholder.com/1920x1080/000033/ffffff?text=Fundo+Noite+Estrelada+Aqui'); background-attachment: fixed; background-position: center; background-repeat: no-repeat; background-size: cover; border-radius: 12px; box-shadow: inset 0 0 50px rgba(0,0,0,0.8); }
 .ghibli-content { background-color: rgba(0, 0, 0, 0.4); border-radius: 12px; }
@@ -241,12 +246,12 @@ body.neon-active .neon-off { color: #fff; text-shadow: 0 0 5px #fff, 0 0 10px #f
 .slot-handle { position: absolute; right: -30px; top: 50%; width: 20px; height: 80px; background: #888; border-radius: 10px; transform: translateY(-50%); box-shadow: inset 2px 2px 5px #fff, inset -2px -2px 5px #000; }
 .slot-handle::before { content: ''; position: absolute; top: -15px; left: -5px; width: 30px; height: 30px; background: #ff4d4d; border-radius: 50%; box-shadow: inset 2px 2px 5px #fff; }
 
-/* Cyberpunk Terminal (Realista) */
+/* Cyberpunk Terminal */
 .cyber-hack-container { background: #0a0a0c; border: 2px solid #ff003c; border-top: 15px solid #ff003c; }
 .cyber-font { font-family: monospace; letter-spacing: 1px; }
 .cyber-title { font-family: monospace; letter-spacing: 2px; }
-.cyber-grid { display: grid; grid-template-columns: repeat(5, 50px); gap: 8px; justify-content: center; }
-.cyber-cell { width: 50px; height: 50px; display: flex; align-items: center; justify-content: center; font-family: monospace; font-size: 1.2rem; color: #ff003c; border: 1px solid #333; cursor: pointer; transition: all 0.2s; background: rgba(255,0,60,0.05); }
+.cyber-grid { display: grid; gap: 8px; justify-content: center; }
+.cyber-cell { display: flex; align-items: center; justify-content: center; font-family: monospace; font-size: 1.2rem; color: #ff003c; border: 1px solid #333; cursor: pointer; transition: all 0.2s; background: rgba(255,0,60,0.05); }
 .cyber-cell:hover { background: rgba(255,0,60,0.3); }
 .cyber-cell.cyber-active { background: #ff003c; color: #000; border-color: #ff003c; pointer-events: none; }
 .cyber-buffer { width: 50px; height: 50px; border: 2px solid #555; display: flex; align-items: center; justify-content: center; font-family: monospace; font-size: 1.2rem; color: #fff; background: #111; }
@@ -257,48 +262,42 @@ body.neon-active .neon-off { color: #fff; text-shadow: 0 0 5px #fff, 0 0 10px #f
 .hidden-heart.found { color: #ff4d4d; opacity: 1; text-shadow: 0 0 10px #ff4d4d; cursor: default; pointer-events: none; transform: scale(1.3); }
 .treasure-hud { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,0.8); border: 1px solid #ff4d4d; color: #fff; padding: 10px 20px; border-radius: 20px; z-index: 9998; font-weight: bold; opacity: 0; pointer-events: none; transition: opacity 0.3s; }
 .treasure-hud.visible { opacity: 1; }
-#fireworks-canvas { position: fixed; top: 0;
- left: 0; width: 100%; height: 100vh; 
-pointer-events: none; z-index: -1; }
+#fireworks-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100vh; pointer-events: none; z-index: -1; }
 
-/* ================= EFEITO FUNDO: CHUVA DE "EU TE AMO" ================= */
-#floating-words-container {
-    position: fixed; top: 0; left: 0; width: 100%; height: 100vh;
-    pointer-events: none; z-index: 0; overflow: hidden;
-}
-.floating-word {
-    position: absolute; color: rgba(255, 255, 255, 0.05); font-weight: bold;
-    white-space: nowrap; animation: floatUp linear infinite;
-}
-@keyframes floatUp {
-    0% { transform: translateY(100vh) rotate(-10deg); opacity: 0; }
-    10% { opacity: 1; }
-    90% { opacity: 1; }
-    100% { transform: translateY(-100px) rotate(10deg); opacity: 0; }
+/* Calendário Semanal */
+.calendar-grid { display: flex; gap: 15px; flex-wrap: wrap; justify-content: center; max-width: 700px; }
+.calendar-door { width: 80px; height: 100px; cursor: pointer; position: relative; perspective: 1000px; transition: transform 0.5s; }
+.calendar-door .front, .calendar-door .back { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; display: flex; align-items: center; justify-content: center; border-radius: 8px; transition: transform 0.6s cubic-bezier(0.4, 0.2, 0.2, 1); box-shadow: 0 4px 8px rgba(0,0,0,0.3); padding: 5px; text-align: center; }
+.calendar-door .front { background: #d62828; border: 2px dashed #ffb3b3; font-size: 1.2rem; font-weight: bold; color: white; }
+.calendar-door .back { background: #fff; color: #d62828; transform: rotateY(180deg); font-size: 0.75rem; border: 2px solid #d62828; font-weight: bold; }
+.calendar-door.open .front { transform: rotateY(180deg); }
+.calendar-door.open .back { transform: rotateY(0deg); }
+.calendar-door.locked { opacity: 0.6; filter: grayscale(80%); cursor: not-allowed; }
+
+/* Quebra-Cabeças Deslizante */
+.puzzle-board { display: grid; border: 4px solid #fff; box-shadow: 0 10px 20px rgba(0,0,0,0.6); background: #111; gap: 2px; }
+.puzzle-piece { width: 100%; height: 100%; background-image: url('https://via.placeholder.com/600x600/e63946/ffffff?text=Nossa+Foto'); background-size: 300% 300%; cursor: pointer; transition: transform 0.1s; }
+.puzzle-empty { background: transparent !important; cursor: default; border: 1px dashed #444; }
+
+
+/* ================= MEDIA QUERIES PARA COMPUTADOR (DESKTOP) ================= */
+@media (min-width: 768px) {
+    .mc-inventory { grid-template-columns: repeat(6, 80px); }
+    .block-game-wrapper { min-height: 450px; }
+    .block-blast-grid { grid-template-columns: repeat(8, 45px); grid-template-rows: repeat(8, 45px); }
+    .slot { width: 100px; height: 130px; font-size: 4.5rem; }
+    .cyber-grid { grid-template-columns: repeat(5, 60px); gap: 10px; }
+    .cyber-cell { width: 60px; height: 60px; font-size: 1.5rem; }
+    .puzzle-board { width: 450px; height: 450px; grid-template-columns: repeat(3, 148px); grid-template-rows: repeat(3, 148px); }
 }
 
-/* ================= MÁQUINA POLAROID E FLASH ================= */
-.camera-btn { 
-    font-size: 4rem; color: #333; background: #fff; border-radius: 50%; 
-    width: 100px; height: 100px; display: flex; align-items: center; justify-content: center; 
-    cursor: pointer; box-shadow: 0 10px 20px rgba(0,0,0,0.5); transition: transform 0.2s; z-index: 10; 
+@media (max-width: 767px) {
+    .floating-player { width: 90%; right: 5%; bottom: 10px; padding: 10px 15px; }
+    .mc-inventory { grid-template-columns: repeat(3, 80px); }
+    .block-game-wrapper { min-height: 350px; }
+    .block-blast-grid { grid-template-columns: repeat(8, 35px); grid-template-rows: repeat(8, 35px); }
+    .slot { width: 80px; height: 100px; font-size: 3.5rem; }
+    .cyber-grid { grid-template-columns: repeat(5, 50px); gap: 8px; }
+    .cyber-cell { width: 50px; height: 50px; font-size: 1.2rem; }
+    .puzzle-board { width: 300px; height: 300px; grid-template-columns: repeat(3, 98px); grid-template-rows: repeat(3, 98px); }
 }
-.camera-btn:hover { transform: scale(1.1); }
-.camera-flash { 
-    position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; 
-    background: white; z-index: 9999; opacity: 0; pointer-events: none; transition: opacity 0.5s; 
-}
-.camera-flash.flash-active { opacity: 1; transition: opacity 0.05s; }
-.polaroid-frame { 
-    position: absolute; top: 50%; left: 50%; 
-    transform: translate(-50%, -50%) scale(0) translateY(-100px); 
-    width: 240px; background: white; padding: 15px 15px 40px 15px; 
-    box-shadow: 0 15px 30px rgba(0,0,0,0.8); z-index: 15; 
-    transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275); border-radius: 2px; 
-}
-.polaroid-frame img { width: 100%; height: auto; border: 1px solid #ccc; filter: sepia(0.2) contrast(1.1); }
-.polaroid-caption { 
-    font-family: 'Comic Sans MS', cursive, sans-serif; color: #333; 
-    text-align: center; margin-top: 15px; font-weight: bold; transform: rotate(-2deg); 
-}
-.polaroid-frame.show { transform: translate(-50%, -50%) scale(1) rotate(5deg) translateY(0); }

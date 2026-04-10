@@ -24,7 +24,7 @@
             <div class="box-lid"></div>
             <div class="box-bottom"></div>
         </div>
-        <div class="scroll-hint">Role para baixo ou toque na tela</div>
+        <div class="scroll-hint">Role para baixo, clique ou aperte qualquer tecla</div>
     </div>
 
     <div class="container" style="padding-top: 10vh; position: relative; z-index: 2;">
@@ -52,8 +52,7 @@
                 <p class="text-secondary">Um motivo especial para cada dia. Descubra a mensagem de hoje!</p>
             </div>
             <div class="col-12 d-flex justify-content-center">
-                <div class="calendar-grid" id="calendar-grid">
-                    </div>
+                <div class="calendar-grid" id="calendar-grid"></div>
             </div>
         </div>
 
@@ -103,8 +102,7 @@
                 <p class="text-secondary">Deslize as peças para montar a nossa foto e revelar o segredo.</p>
             </div>
             <div class="col-12 d-flex flex-column align-items-center">
-                <div class="puzzle-board" id="puzzle-board">
-                    </div>
+                <div class="puzzle-board" id="puzzle-board"></div>
                 <div id="puzzle-message" class="mt-4 p-3 rounded bg-dark border border-danger fw-bold" style="display:none; max-width: 320px; color: #ff4d4d;">
                     Assim como essas peças, nós nos encaixamos perfeitamente! ❤️
                 </div>
@@ -151,12 +149,6 @@
             </div>
         </div>
 
-        <div class="row fade-in-section mt-5">
-            <div class="col-md-4 mb-4"><div class="envelope"><div class="letter">PNG da carta 1</div></div></div>
-            <div class="col-md-4 mb-4"><div class="envelope"><div class="letter">PNG da carta 2</div></div></div>
-            <div class="col-md-4 mb-4"><div class="envelope"><div class="letter">Novos desenhos!</div></div></div>
-        </div>
-
         <div class="row fade-in-section mt-5 mb-5 text-center">
             <div class="col-12 mb-4">
                 <h2>Caça-Níquel do Destino</h2>
@@ -181,24 +173,24 @@
         </div>
 
        <div class="row fade-in-section mt-5 mb-5 text-center">
-    <div class="col-12 mb-4">
-        <h2>Retrato Perfeito</h2>
-        <p class="text-secondary">Dê o seu melhor sorriso e clique na câmera!</p>
-    </div>
-    <div class="col-12 position-relative d-flex justify-content-center align-items-center" style="min-height: 400px; z-index: 10;">
-        
-        <div class="camera-btn" onclick="takePolaroid()">
-            <i class="bi bi-camera-fill"></i>
+            <div class="col-12 mb-4">
+                <h2>Retrato Perfeito</h2>
+                <p class="text-secondary">Dê o seu melhor sorriso e clique na câmera!</p>
+            </div>
+            <div class="col-12 position-relative d-flex justify-content-center align-items-center" style="min-height: 400px; z-index: 10;">
+                
+                <div class="camera-btn" onclick="takePolaroid()">
+                    <i class="bi bi-camera-fill"></i>
+                </div>
+                
+                <div id="camera-flash" class="camera-flash"></div>
+                
+                <div id="polaroid-output" class="polaroid-frame">
+                    <img src="https://via.placeholder.com/300x300/ff9a9e/ffffff?text=Link+da+Gatinha+Aqui" alt="Gatinha">
+                    <div class="polaroid-caption">A gatinha mais linda! ❤️</div>
+                </div>
+            </div>
         </div>
-        
-        <div id="camera-flash" class="camera-flash"></div>
-        
-        <div id="polaroid-output" class="polaroid-frame">
-            <img src="https://via.placeholder.com/300x300/ff9a9e/ffffff?text=Link+da+Gatinha+Aqui" alt="Gatinha">
-            <div class="polaroid-caption">A gatinha mais linda! ❤️</div>
-        </div>
-    </div>
-</div>
 
         <div class="row fade-in-section mt-5 mb-5">
             <div class="col-12 mb-4 text-center">
@@ -232,12 +224,12 @@
             <div class="col-12">
                 <div class="mc-inventory-wrapper">
                     <div class="mc-inventory">
-                        <div class="mc-slot"><span class="mc-tooltip">Item Especial 1</span></div>
-                        <div class="mc-slot"><span class="mc-tooltip">Item Especial 2</span></div>
-                        <div class="mc-slot"><span class="mc-tooltip">Item Especial 3</span></div>
-                        <div class="mc-slot"><span class="mc-tooltip">Item Especial 4</span></div>
-                        <div class="mc-slot"><span class="mc-tooltip">Item Especial 5</span></div>
-                        <div class="mc-slot"><span class="mc-tooltip">Item Especial 6</span></div>
+                        <div class="mc-slot">🎁<span class="mc-tooltip">Primeiro Presente</span></div>
+                        <div class="mc-slot">💌<span class="mc-tooltip">Cartinha Escrita à Mão</span></div>
+                        <div class="mc-slot">🍕<span class="mc-tooltip">Aquela Pizza Incrível</span></div>
+                        <div class="mc-slot">🧸<span class="mc-tooltip">Pelúcia Fofa</span></div>
+                        <div class="mc-slot">👕<span class="mc-tooltip">Camisa do Corinthians</span></div>
+                        <div class="mc-slot">💍<span class="mc-tooltip">Aliança de Namoro</span></div>
                     </div>
                 </div>
             </div>
@@ -315,46 +307,6 @@
             </div>
         </div>
 
-        <div class="row fade-in-section mt-5 mb-5">
-            <div class="col-md-10 mx-auto">
-                <div class="resume-container">
-                    <div class="resume-header text-center">
-                        <h2 class="resume-title">Lucas</h2>
-                        <h5 class="text-secondary">Candidato à Vaga: Amor da sua Vida</h5>
-                    </div>
-                    <div class="mb-4">
-                        <span class="resume-badge">Objetivo Profissional</span>
-                        <p>Preencher a vaga em tempo integral ao seu lado, oferecendo lealdade, parceria estratégica em jogos e manutenção contínua do seu sorriso.</p>
-                    </div>
-                    <div class="mb-4">
-                        <span class="resume-badge">Experiência Comprovada</span>
-                        <ul>
-                            <li><strong>Parceiro de Sobrevivência:</strong> Fechamos juntos o The Binding of Isaac. Capacidade comprovada de lidar com pressão.</li>
-                            <li><strong>Assistência Técnica Especializada:</strong> Montagem e resolução de problemas de hardware para garantir que as nossas noites de jogos nunca sejam interrompidas.</li>
-                            <li><strong>Desenvolvedor de Soluções Criativas:</strong> Construção de projetos web com HTML, CSS e JS exclusivamente para criar surpresas inesquecíveis.</li>
-                        </ul>
-                    </div>
-                    <div>
-                        <span class="resume-badge">Competências (Soft Skills)</span>
-                        <div class="row">
-                            <div class="col-md-6">
-                                <ul>
-                                    <li>Paciência nível Stardew Valley.</li>
-                                    <li>Excelente companhia para assistir às nossas séries.</li>
-                                </ul>
-                            </div>
-                            <div class="col-md-6">
-                                <ul>
-                                    <li>Disposição para te fazer rir todos os dias.</li>
-                                    <li>Companheiro de equipe para o Corinthians.</li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
         <div class="row fade-in-section mt-5 mb-5 text-center">
             <div class="col-md-6 mx-auto">
                 <div class="wanted-poster">
@@ -364,18 +316,6 @@
                     <h3 class="mt-3 text-dark fw-bold">A Ladra</h3>
                     <p class="text-dark px-3 fw-bold">Procura-se por ter roubado o coração do Lucas. Recompensa: Todo o meu amor.</p>
                 </div>
-            </div>
-        </div>
-
-        <div class="row fade-in-section mt-5">
-            <div class="col-12 mb-4 text-center"><h2>Conquistas Desbloqueadas</h2></div>
-            <div class="col-md-6">
-                <div class="trophy-card"><i class="bi bi-trophy-fill trophy-icon trophy-platinum"></i><div><h5 class="mb-1">Platina: O Meu Coração</h5></div></div>
-                <div class="trophy-card"><i class="bi bi-trophy-fill trophy-icon trophy-gold"></i><div><h5 class="mb-1">Zerar The Binding of Isaac</h5></div></div>
-            </div>
-            <div class="col-md-6">
-                <div class="trophy-card"><i class="bi bi-trophy-fill trophy-icon trophy-silver"></i><div><h5 class="mb-1">Caos em Night City</h5></div></div>
-                <div class="trophy-card"><i class="bi bi-trophy-fill trophy-icon trophy-bronze"></i><div><h5 class="mb-1">Primeira Viagem</h5></div></div>
             </div>
         </div>
 
@@ -427,13 +367,6 @@
             </div>
         </div>
 
-        <div class="row fade-in-section mt-5">
-            <div class="col-12"><div class="whatsapp-container clearfix">
-                <div class="msg-bubble msg-received">Lembra-se do dia em que fomos comer aquele salame caseiro? <span class="msg-time">14:20</span></div>
-                <div class="msg-bubble msg-sent">Dos meus pais? Nossa, estava perfeito. ❤️<span class="msg-time">14:22</span></div>
-            </div></div>
-        </div>
-
         <div class="row fade-in-section mt-5 align-items-center position-relative">
             <div class="col-md-5 mb-4"><div class="stardew-card"><h4 class="fw-bold mb-3">Fazendeira Naty</h4><div class="stardew-placeholder">PNG</div></div></div>
             <div class="col-md-7 mb-4 position-relative">
@@ -473,16 +406,6 @@
                     <div class="pin" style="top: 60%; left: 70%;" data-bs-toggle="modal" data-bs-target="#mapModal" onclick="updateModal('Arena', '...')"></div>
                 </div>
             </div>
-        </div>
-
-        <div class="row fade-in-section mt-5">
-            <div class="col-12 text-center mb-4"><h2>6 motivos para te amar</h2></div>
-            <div class="col-6 col-md-4"><div class="flip-card"><div class="flip-card-inner"><div class="flip-card-front">1</div><div class="flip-card-back">O seu sorriso.</div></div></div></div>
-            <div class="col-6 col-md-4"><div class="flip-card"><div class="flip-card-inner"><div class="flip-card-front">2</div><div class="flip-card-back">A sua dedicação.</div></div></div></div>
-            <div class="col-6 col-md-4"><div class="flip-card"><div class="flip-card-inner"><div class="flip-card-front">3</div><div class="flip-card-back">As nossas madrugadas.</div></div></div></div>
-            <div class="col-6 col-md-4"><div class="flip-card"><div class="flip-card-inner"><div class="flip-card-front">4</div><div class="flip-card-back">O seu cuidado.</div></div></div></div>
-            <div class="col-6 col-md-4"><div class="flip-card"><div class="flip-card-inner"><div class="flip-card-front">5</div><div class="flip-card-back">A sua inteligência.</div></div></div></div>
-            <div class="col-6 col-md-4"><div class="flip-card"><div class="flip-card-inner"><div class="flip-card-front">6</div><div class="flip-card-back">A minha melhor amiga.</div></div></div></div>
         </div>
 
         <div class="row fade-in-section mt-5 mb-5">
