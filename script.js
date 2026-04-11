@@ -1,21 +1,68 @@
-// ================= 1. CAIXA DE ABERTURA =================
+// ================= 1. ANIMAÇÃO DE ABERTURA (FRAMES) =================
 let hasOpened = false;
 const introScreen = document.getElementById('intro-screen');
-const giftBox = document.getElementById('gift-box');
+const introFrame = document.getElementById('intro-frame');
+const introContainer = document.getElementById('intro-animation-container');
+const hint = document.getElementById('intro-hint');
+
+const frames = [
+    "caixa001.png",
+    "caixa002.png",
+    "caixa003.png",
+    "caixa004.png",
+    "caixa005.png",
+    "caixa006.png",
+    "caixa007.png",
+    "caixa008.png"
+];
+
+// SEGURANÇA: Força o primeiro frame a aparecer instantaneamente no ecrã 
+// assim que a página carrega, evitando qualquer texto quebrado.
+if (introFrame) {
+    introFrame.src = frames[0];
+}
+
+// Pré-carregar as imagens na memória para garantir que a animação não engasga
+frames.forEach(src => {
+    const img = new Image();
+    img.src = src;
+});
 
 function openSite() {
     if (hasOpened) return;
     hasOpened = true;
-    giftBox.classList.add('open');
-    setTimeout(() => {
-        introScreen.style.opacity = '0';
-        document.body.style.overflowY = 'auto'; 
-        setTimeout(() => { 
-            introScreen.style.display = 'none'; 
-            typeTerminal(); 
-            if (typeof startFloatingWords === 'function') startFloatingWords();
-        }, 1000); 
-    }, 1000);
+    
+    if (hint) hint.style.opacity = '0'; // Esconde o texto piscante
+
+    let currentFrame = 0;
+    
+    // Dispara o zoom IMEDIATAMENTE no frame 1
+    if (introContainer) introContainer.classList.add('zoom-active');
+    
+    // Inicia a troca rápida de imagens (80 milissegundos por frame)
+    const frameInterval = setInterval(() => {
+        currentFrame++;
+        
+        if (currentFrame < frames.length) {
+            introFrame.src = frames[currentFrame];
+        } else {
+            clearInterval(frameInterval);
+            
+            // O zoom já está a acontecer junto com os frames, 
+            // só precisamos remover a tela preta de fundo suavemente
+            setTimeout(() => {
+                if (introScreen) introScreen.style.opacity = '0';
+                document.body.style.overflowY = 'auto'; // Libera o scroll
+                
+                setTimeout(() => { 
+                    if (introScreen) introScreen.style.display = 'none'; 
+                    if(typeof typeTerminal === 'function') typeTerminal(); 
+                    if(typeof startFloatingWords === 'function') startFloatingWords();
+                }, 800); 
+                
+            }, 100); 
+        }
+    }, 80); 
 }
 
 window.addEventListener('wheel', openSite);
@@ -29,6 +76,7 @@ const obs = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
         if(entry.isIntersecting) {
             entry.target.classList.add('visible');
+            
             if(entry.target.id === 'final-heart-section' && !windowErrorShown) {
                 setTimeout(showWindowsError, 1000);
                 windowErrorShown = true;
@@ -249,7 +297,7 @@ function startFireworks() {
     animateFw();
 }
 
-// ================= 8. BLOCK BLAST (8x8) =================
+// ================= 8. BLOCK BLAST =================
 const gameGrid = document.getElementById('game-grid');
 if(gameGrid) {
     const colors = ['#e63946', '#457b9d', '#2a9d8f', '#e9c46a'];
@@ -356,7 +404,7 @@ function checkPassword() {
     } else {
         document.getElementById('vault-pass').style.border = '2px solid red';
         document.getElementById('vault-pass').value = '';
-        document.getElementById('vault-pass').placeholder = 'Palavra-passe incorreta!';
+        document.getElementById('vault-pass').placeholder = 'Senha incorreta!';
     }
 }
 
@@ -470,22 +518,7 @@ function completeQuest(btn) {
     btn.classList.replace('btn-outline-dark', 'btn-success');
 }
 
-// ================= 15. AVALIAÇÃO DE SÉRIES =================
-function rateMedia(starElement, rating) {
-    const container = starElement.closest('.star-rating');
-    const stars = container.querySelectorAll('i');
-    stars.forEach((star, index) => {
-        if (index < rating) {
-            star.classList.replace('bi-star', 'bi-star-fill');
-            star.classList.add('active');
-        } else {
-            star.classList.replace('bi-star-fill', 'bi-star');
-            star.classList.remove('active');
-        }
-    });
-}
-
-// ================= 16. CALENDÁRIO SEMANAL =================
+// ================= 15. CALENDÁRIO SEMANAL =================
 const calendarGrid = document.getElementById('calendar-grid');
 if(calendarGrid) {
     const daysOfWeek = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
@@ -521,7 +554,7 @@ if(calendarGrid) {
     });
 }
 
-// ================= 17. QUEBRA-CABEÇAS DESLIZANTE =================
+// ================= 16. QUEBRA-CABEÇAS DESLIZANTE =================
 const puzzleBoard = document.getElementById('puzzle-board');
 if(puzzleBoard) {
     let tiles = [0, 1, 2, 3, 4, 5, 6, 7, 8];
@@ -593,7 +626,7 @@ if(puzzleBoard) {
     renderPuzzle();
 }
 
-// ================= 18. MÁQUINA POLAROID COM GATINHA =================
+// ================= 17. MÁQUINA POLAROID COM GATINHA =================
 function takePolaroid() {
     const flash = document.getElementById('camera-flash');
     const polaroid = document.getElementById('polaroid-output');
@@ -609,7 +642,7 @@ function takePolaroid() {
     }, 150);
 }
 
-// ================= 19. EFEITO DE CHUVA "EU TE AMO" NO FUNDO =================
+// ================= 18. EFEITO DE CHUVA "EU TE AMO" NO FUNDO =================
 function startFloatingWords() {
     const wordsContainer = document.getElementById('floating-words-container');
     if (!wordsContainer) return;

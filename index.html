@@ -19,12 +19,11 @@
         <i class="bi bi-search"></i> Segredos Encontrados: <span id="treasure-count">0</span>/5
     </div>
 
-    <div id="intro-screen">
-        <div class="gift-box" id="gift-box">
-            <div class="box-lid"></div>
-            <div class="box-bottom"></div>
+<div id="intro-screen">
+        <div id="intro-animation-container">
+            <img id="intro-frame" src="caixa001.png" style="width: 100%; height: auto; object-fit: contain;">
         </div>
-        <div class="scroll-hint">Role para baixo, clique ou aperte qualquer tecla</div>
+        <div class="scroll-hint" id="intro-hint">Deslize para baixo, clique ou aperte qualquer tecla</div>
     </div>
 
     <div class="container" style="padding-top: 10vh; position: relative; z-index: 2;">
@@ -53,17 +52,6 @@
             </div>
             <div class="col-12 d-flex justify-content-center">
                 <div class="calendar-grid" id="calendar-grid"></div>
-            </div>
-        </div>
-
-        <div class="row fade-in-section mt-5 mb-5 text-center">
-            <div class="col-12">
-                <div class="neon-section p-5 rounded position-relative">
-                    <i class="bi bi-suit-heart-fill hidden-heart" style="top: 10px; left: 10px;" onclick="findHeart(this)"></i>
-                    <h2 id="neon-text" class="neon-off">NATY & LUCAS</h2>
-                    <p class="mt-3 text-light">Você ilumina o meu mundo.</p>
-                    <button class="btn btn-outline-light mt-3" onclick="toggleNeon()">Ligar Interruptor <i class="bi bi-lightbulb"></i></button>
-                </div>
             </div>
         </div>
 
@@ -149,28 +137,6 @@
             </div>
         </div>
 
-        <div class="row fade-in-section mt-5 mb-5 text-center">
-            <div class="col-12 mb-4">
-                <h2>Caça-Níquel do Destino</h2>
-                <p class="text-secondary">Tente a sorte. O que o futuro reserva para nós?</p>
-            </div>
-            <div class="col-12 d-flex justify-content-center">
-                <div class="slot-machine-container position-relative">
-                    <div class="slot-machine">
-                        <div class="slot"><div class="slot-reel" id="reel1">❓</div></div>
-                        <div class="slot"><div class="slot-reel" id="reel2">❓</div></div>
-                        <div class="slot"><div class="slot-reel" id="reel3">❓</div></div>
-                    </div>
-                    <div class="slot-handle"></div>
-                </div>
-            </div>
-            <div class="col-12 mt-4">
-                <button id="btn-spin" class="btn btn-warning px-5 py-2 fw-bold shadow" onclick="spinSlots()">Girar a Sorte <i class="bi bi-arrow-clockwise"></i></button>
-                <div id="slot-message" class="mt-4 p-3 rounded bg-dark text-light border border-danger mx-auto" style="display:none; max-width: 400px;">
-                    <h5 class="text-danger mb-0">Jackpot! O meu prêmio máximo sempre foi você. ❤️</h5>
-                </div>
-            </div>
-        </div>
 
        <div class="row fade-in-section mt-5 mb-5 text-center">
             <div class="col-12 mb-4">
@@ -235,38 +201,7 @@
             </div>
         </div>
 
-        <div class="row fade-in-section mt-5 mb-5 parallax-ghibli">
-            <div class="col-12 text-center text-white py-5 ghibli-content">
-                <h2 class="mb-4 text-shadow-strong">Nosso Universo</h2>
-                <p class="lead text-shadow-strong mb-5">Nós, na nossa própria obra de arte.</p>
-                <div class="d-flex justify-content-center gap-4 flex-wrap">
-                    <div class="ghibli-frame"><div class="ghibli-placeholder">PNG Versão Ghibli 1</div></div>
-                    <div class="ghibli-frame"><div class="ghibli-placeholder">PNG Versão Ghibli 2</div></div>
-                </div>
-            </div>
-        </div>
 
-        <div class="row fade-in-section mt-5 mb-5 text-center">
-            <div class="col-md-8 mx-auto">
-                <div class="cyber-hack-container p-4 rounded shadow-lg">
-                    <h3 class="text-danger cyber-title">BREACH PROTOCOL</h3>
-                    <p class="text-success small mb-4 cyber-font">Encontre a sequência: [ 1C ] - [ BD ] - [ 55 ]</p>
-                    
-                    <div class="d-flex justify-content-center mb-4 gap-2">
-                        <div class="cyber-buffer" id="buf-0"></div>
-                        <div class="cyber-buffer" id="buf-1"></div>
-                        <div class="cyber-buffer" id="buf-2"></div>
-                    </div>
-
-                    <div class="cyber-grid mt-2 mx-auto" id="cyber-grid"></div>
-                    
-                    <div id="cyber-message" class="mt-4 p-3 border border-success" style="display:none; background: rgba(0,255,0,0.1);">
-                        <h5 class="text-success mb-1 cyber-font">ACESSO CONCEDIDO</h5>
-                        <p class="mb-0 text-light">"Nenhum sistema no mundo é tão complexo e perfeito quanto o nosso amor."</p>
-                    </div>
-                </div>
-            </div>
-        </div>
 
         <div class="row fade-in-section mt-5 mb-5">
             <div class="col-12 mb-4 text-center">

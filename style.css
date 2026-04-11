@@ -10,7 +10,7 @@ html, body {
     margin: 0; padding: 0;
     max-width: 100%; 
     overflow-x: hidden; 
-    background: linear-gradient(to bottom, #ff9a9e 0%, #fecfef 15%, #121212 30%, #050505 100%);
+    background: linear-gradient(to bottom, #0e0e0e 0%, #070707 15%, #000000 30%, #000000 100%);
     color: white; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
@@ -24,12 +24,23 @@ body { overflow-y: hidden; }
 }
 .scroll-hint { color: rgba(255,255,255,0.6); margin-top: 50px; font-size: 1rem; animation: bounce 2s infinite; text-align: center; }
 
-/* ================= CAIXA 2D ================= */
-.gift-box { position: relative; width: 150px; height: 150px; }
-.box-bottom { width: 100%; height: 100%; background-color: #e63946; border-radius: 10px; position: absolute; bottom: 0; box-shadow: inset 0 0 20px rgba(0,0,0,0.3); }
-.box-lid { width: 160px; height: 40px; background-color: #d62828; border-radius: 5px; position: absolute; top: -20px; left: -5px; z-index: 2; transition: transform 1s ease-in-out, opacity 1s ease-in-out; box-shadow: 0 5px 10px rgba(0,0,0,0.3); }
-.box-bottom::after, .box-lid::after { content: ''; position: absolute; left: 50%; transform: translateX(-50%); width: 20px; height: 100%; background-color: #f1faee; }
-.gift-box.open .box-lid { transform: translateY(-100px) rotate(-15deg); opacity: 0; }
+/* ================= ANIMAÇÃO DE ABERTURA (FRAMES E ZOOM) ================= */
+#intro-animation-container {
+    width: 250px;
+    height: 250px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* Transformação dura 0.8s (sincronizado com os frames). 
+       A opacidade tem um "delay" de 0.5s para só desaparecer no final do mergulho */
+    transition: transform 1.0s ease-in, opacity 0.4s ease-out 0.5s;
+}
+
+#intro-animation-container.zoom-active {
+    transform: scale(15); /* Aumentei um pouco a escala para o mergulho ser mais profundo */
+    opacity: 0;
+    pointer-events: none;
+}
 
 /* ================= SCROLL ANIMAÇÕES ================= */
 .fade-in-section { opacity: 0; transform: translateY(50px); transition: opacity 1s ease-out, transform 1s ease-out; margin: 10vh 0; }
