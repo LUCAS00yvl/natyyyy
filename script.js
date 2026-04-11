@@ -1,74 +1,87 @@
-// ================= 1. ANIMAÇÃO DE ABERTURA (FRAMES) =================
+// ================= 1. ANIMAÇÃO DE ABERTURA (CONTROLO TOTAL POR FRAME) =================
 let hasOpened = false;
+let isAnimating = false;
+
 const introScreen = document.getElementById('intro-screen');
 const introFrame = document.getElementById('intro-frame');
 const introContainer = document.getElementById('intro-animation-container');
 const hint = document.getElementById('intro-hint');
 
+// AQUI: Controle de cada frame da animação, definindo a imagem, escala e opacidade desejada, além do tempo que cada frame deve durar.
 const frames = [
-    "caixa001.png",
-    "caixa002.png",
-    "caixa003.png",
-    "caixa004.png",
-    "caixa005.png",
-    "caixa006.png",
-    "caixa007.png",
-    "caixa008.png"
+    { src: "caixa001.png", scale: 2.0, opacity: 1.0, duration: 150 },
+    { src: "caixa002.png", scale: 1.5, opacity: 1.0, duration: 150 },
+    { src: "caixa003.png", scale: 1.8, opacity: 1.0, duration: 150 },
+    { src: "caixa004.png", scale: 2.2, opacity: 0.7, duration: 150 },
+    { src: "caixa005.png", scale: 3.5, opacity: 0.5, duration: 150 },
+    { src: "caixa006.png", scale: 5.5, opacity: 0.3, duration: 150 },
+    { src: "caixa007.png", scale: 7.5, opacity: 0.1, duration: 150 },
+    { src: "caixa008.png", scale: 9.0, opacity: 0.05, duration: 50 } 
 ];
 
-// SEGURANÇA: Força o primeiro frame a aparecer instantaneamente no ecrã 
-// assim que a página carrega, evitando qualquer texto quebrado.
 if (introFrame) {
-    introFrame.src = frames[0];
+    introFrame.src = frames[0].src;
+    introFrame.style.transform = `scale(${frames[0].scale})`;
+    introFrame.style.opacity = frames[0].opacity;
 }
 
-// Pré-carregar as imagens na memória para garantir que a animação não engasga
-frames.forEach(src => {
+frames.forEach(f => {
     const img = new Image();
-    img.src = src;
+    img.src = f.src;
 });
+
+async function playIntroAnimation() {
+    for (let i = 0; i < frames.length; i++) {
+        const frame = frames[i];
+        introFrame.src = frame.src;
+        introFrame.style.transition = `transform ${frame.duration}ms linear, opacity ${frame.duration}ms linear`;
+        introFrame.style.transform = `scale(${frame.scale})`;
+        introFrame.style.opacity = frame.opacity;
+        await new Promise(resolve => setTimeout(resolve, frame.duration));
+    }
+
+    if (introScreen) {
+        introScreen.style.transition = 'opacity 0.8s ease-out';
+        introScreen.style.opacity = '0';
+    }
+    
+    window.scrollTo(0, 0); 
+    
+    setTimeout(() => { 
+        if (introScreen) introScreen.style.display = 'none'; 
+        
+        document.body.style.overflowY = 'auto';
+        document.documentElement.style.overflowY = 'auto';
+        isAnimating = false;
+        
+        if(typeof startFloatingWords === 'function') startFloatingWords();
+    }, 800); 
+}
 
 function openSite() {
     if (hasOpened) return;
     hasOpened = true;
+    isAnimating = true; 
     
-    if (hint) hint.style.opacity = '0'; // Esconde o texto piscante
-
-    let currentFrame = 0;
-    
-    // Dispara o zoom IMEDIATAMENTE no frame 1
-    if (introContainer) introContainer.classList.add('zoom-active');
-    
-    // Inicia a troca rápida de imagens (80 milissegundos por frame)
-    const frameInterval = setInterval(() => {
-        currentFrame++;
-        
-        if (currentFrame < frames.length) {
-            introFrame.src = frames[currentFrame];
-        } else {
-            clearInterval(frameInterval);
-            
-            // O zoom já está a acontecer junto com os frames, 
-            // só precisamos remover a tela preta de fundo suavemente
-            setTimeout(() => {
-                if (introScreen) introScreen.style.opacity = '0';
-                document.body.style.overflowY = 'auto'; // Libera o scroll
-                
-                setTimeout(() => { 
-                    if (introScreen) introScreen.style.display = 'none'; 
-                    if(typeof typeTerminal === 'function') typeTerminal(); 
-                    if(typeof startFloatingWords === 'function') startFloatingWords();
-                }, 800); 
-                
-            }, 100); 
-        }
-    }, 80); 
+    if (hint) hint.style.opacity = '0';
+    playIntroAnimation();
 }
 
-window.addEventListener('wheel', openSite);
-window.addEventListener('touchstart', openSite);
-window.addEventListener('click', openSite);
-window.addEventListener('keydown', openSite);
+function handleInteraction(e) {
+    if (hasOpened && !isAnimating) return;
+    if (e.type !== 'click' && e.cancelable) {
+        e.preventDefault();
+    }
+    if (!hasOpened) {
+        openSite();
+    }
+}
+
+window.addEventListener('wheel', handleInteraction, { passive: false });
+window.addEventListener('touchmove', handleInteraction, { passive: false });
+window.addEventListener('touchstart', handleInteraction, { passive: false });
+window.addEventListener('keydown', handleInteraction, { passive: false });
+window.addEventListener('click', handleInteraction);
 
 // ================= 2. ANIMAÇÕES DE SCROLL =================
 let windowErrorShown = false;
@@ -80,6 +93,10 @@ const obs = new IntersectionObserver((entries) => {
             if(entry.target.id === 'final-heart-section' && !windowErrorShown) {
                 setTimeout(showWindowsError, 1000);
                 windowErrorShown = true;
+            }
+            // Para o terminal rodar quando chegar à última secção
+            if(entry.target.querySelector('.terminal-body')) {
+                if(typeof typeTerminal === 'function') typeTerminal(); 
             }
             obs.unobserve(entry.target);
         }
@@ -117,195 +134,15 @@ function updateCounter() {
 setInterval(updateCounter, 1000);
 updateCounter();
 
-// ================= 4. TERMINAL DA LINHA DE CÓDIGO =================
-const terminalLines = [
-    "> Inicializando Sistema de Amar a Naty...",
-    "> Analisando compatibilidade dos dados...",
-    "> [Cálculo] Paciência(Lucas) + Foco(Naty) = Sucesso garantido no Stardew Valley",
-    "> [Cálculo] (Amor * Respeito) ^ Companheirismo = Infinito",
-    "> Conectando ao servidor principal do coração: [CONECTADO]",
-    "> AVISO: A quantidade de amor processada excedeu os limites de memória física.",
-    "> print('Eu te amo eternamente, Naty');"
-];
 
-function typeTerminal() {
-    const termBody = document.getElementById('terminal-text');
-    if(!termBody) return;
-    
-    let lineIndex = 0;
-    let charIndex = 0;
-
-    function typeChar() {
-        if (lineIndex < terminalLines.length) {
-            if (charIndex === 0) termBody.innerHTML += '<br>';
-            if (charIndex < terminalLines[lineIndex].length) {
-                termBody.innerHTML += terminalLines[lineIndex].charAt(charIndex);
-                charIndex++;
-                setTimeout(typeChar, Math.random() * 40 + 10);
-            } else {
-                lineIndex++;
-                charIndex = 0;
-                setTimeout(typeChar, 600);
-            }
-        } else {
-            termBody.innerHTML += '<span class="cursor"></span>'; 
-        }
-    }
-    typeChar();
-}
-
-// ================= 5. CAÇA-NÍQUEL DO DESTINO =================
-let isSpinning = false;
-function spinSlots() {
-    if (isSpinning) return;
-    isSpinning = true;
-    
-    const btn = document.getElementById('btn-spin');
-    const msg = document.getElementById('slot-message');
-    if(!btn || !msg) return;
-    
-    btn.disabled = true;
-    msg.style.display = 'none';
-
-    const emojis = ['🍒', '🍋', '🔔', '🍉', '⭐', '❤️'];
-    const reels = [document.getElementById('reel1'), document.getElementById('reel2'), document.getElementById('reel3')];
-    
-    let spins = 0;
-    const spinInterval = setInterval(() => {
-        reels.forEach(reel => {
-            if(reel) reel.innerText = emojis[Math.floor(Math.random() * emojis.length)];
-        });
-        spins++;
-
-        if (spins > 20) {
-            clearInterval(spinInterval);
-            reels.forEach(reel => { if(reel) reel.innerText = '❤️'; });
-            msg.style.display = 'block';
-            btn.disabled = false;
-            isSpinning = false;
-        }
-    }, 100);
-}
-
-// ================= 6. HACK CYBERPUNK =================
-const cyberGrid = document.getElementById('cyber-grid');
-if(cyberGrid) {
-    const hexCodes = [
-        '1C', 'E9', 'FF', '55', 'BD',
-        'FF', '1C', 'BD', '55', '1C',
-        '55', 'BD', 'E9', 'FF', 'E9',
-        '1C', '55', 'FF', 'BD', 'E9',
-        'E9', 'BD', '1C', '55', 'FF'
-    ];
-    const correctSequence = ['1C', 'BD', '55'];
-    let cyberBuffer = [];
-
-    hexCodes.forEach((hex, index) => {
-        const cell = document.createElement('div');
-        cell.className = 'cyber-cell';
-        cell.innerText = hex;
-        
-        cell.addEventListener('click', () => {
-            if(cyberBuffer.length < 3 && !cell.classList.contains('cyber-active')) {
-                cell.classList.add('cyber-active');
-                
-                document.getElementById(`buf-${cyberBuffer.length}`).innerText = hex;
-                document.getElementById(`buf-${cyberBuffer.length}`).classList.add('filled');
-                cyberBuffer.push(hex);
-                
-                if(cyberBuffer.length === 3) {
-                    if(cyberBuffer.join(',') === correctSequence.join(',')) {
-                        document.getElementById('cyber-message').style.display = 'block';
-                        document.querySelectorAll('.cyber-cell').forEach(c => c.style.pointerEvents = 'none');
-                    } else {
-                        setTimeout(() => {
-                            cyberBuffer = [];
-                            document.querySelectorAll('.cyber-buffer').forEach(b => { b.innerText = ''; b.classList.remove('filled'); });
-                            document.querySelectorAll('.cyber-cell').forEach(c => c.classList.remove('cyber-active'));
-                        }, 500);
-                    }
-                }
-            }
-        });
-        cyberGrid.appendChild(cell);
-    });
-}
-
-// ================= 7. CAÇA AOS TESOUROS =================
-let heartsFound = 0;
-function findHeart(element) {
-    if(!element.classList.contains('found')) {
-        element.classList.add('found');
-        heartsFound++;
-        
-        const hud = document.getElementById('treasure-hud');
-        if(hud) {
-            hud.classList.add('visible');
-            document.getElementById('treasure-count').innerText = heartsFound;
-
-            if (heartsFound === 5) {
-                hud.innerHTML = "<i class='bi bi-stars'></i> Todos os segredos revelados! O nosso amor ilumina o céu.";
-                startFireworks();
-            }
-        }
-    }
-}
-
-function startFireworks() {
-    const fwCanvas = document.getElementById('fireworks-canvas');
-    if(!fwCanvas) return;
-    const fwCtx = fwCanvas.getContext('2d');
-    fwCanvas.width = window.innerWidth;
-    fwCanvas.height = window.innerHeight;
-    fwCanvas.style.zIndex = '9997'; 
-    
-    const fwParticles = [];
-    setInterval(() => {
-        const x = Math.random() * fwCanvas.width;
-        const y = Math.random() * fwCanvas.height / 2;
-        const color = `hsl(${Math.random()*360}, 100%, 50%)`;
-        for(let i=0; i<30; i++) {
-            fwParticles.push({
-                x: x, y: y,
-                vx: (Math.random() - 0.5) * 5,
-                vy: (Math.random() - 0.5) * 5,
-                alpha: 1, color: color
-            });
-        }
-    }, 1000);
-
-    function animateFw() {
-        fwCtx.clearRect(0, 0, fwCanvas.width, fwCanvas.height);
-        for(let i=0; i<fwParticles.length; i++) {
-            const p = fwParticles[i];
-            p.x += p.vx;
-            p.y += p.vy;
-            p.vy += 0.05; 
-            p.alpha -= 0.01;
-            
-            fwCtx.globalAlpha = Math.max(0, p.alpha);
-            fwCtx.fillStyle = p.color;
-            fwCtx.beginPath();
-            fwCtx.arc(p.x, p.y, 2, 0, Math.PI*2);
-            fwCtx.fill();
-            
-            if(p.alpha <= 0) { fwParticles.splice(i, 1); i--; }
-        }
-        fwCtx.globalAlpha = 1;
-        requestAnimationFrame(animateFw);
-    }
-    animateFw();
-}
-
-// ================= 8. BLOCK BLAST =================
+// ================= 4. BLOCK BLAST & QUIZ EMPILHADOS =================
 const gameGrid = document.getElementById('game-grid');
 if(gameGrid) {
     const colors = ['#e63946', '#457b9d', '#2a9d8f', '#e9c46a'];
     const gridSize = 8;
     const totalBlocks = gridSize * gridSize; 
     let blocksState = Array(totalBlocks).fill(true); 
-    let activeBlocks = totalBlocks;
-
+    
     for (let i = 0; i < totalBlocks; i++) {
         const block = document.createElement('div');
         block.classList.add('game-block');
@@ -328,19 +165,10 @@ if(gameGrid) {
             toDestroy.forEach(idx => {
                 if (idx >= 0 && idx < totalBlocks && blocksState[idx]) {
                     blocksState[idx] = false;
-                    activeBlocks--;
                     const b = gameGrid.querySelector(`[data-index='${idx}']`);
                     b.classList.add('popped');
                 }
             });
-
-            if (activeBlocks <= 0) {
-                gameGrid.style.opacity = '0';
-                setTimeout(() => { 
-                    gameGrid.style.display = 'none'; 
-                    renderQuestion(); 
-                }, 500); 
-            }
         });
         gameGrid.appendChild(block);
     }
@@ -348,9 +176,9 @@ if(gameGrid) {
 
 // QUIZ
 const quizQuestions = [
-    { q: "Qual destas séries é a melhor para maratonar?", b1: "The Big Bang Theory", b2: "Jovem Sheldon" },
-    { q: "Quem foca mais na fazenda do Stardew Valley?", b1: "Lucas", b2: "Naty" },
-    { q: "O Corinthians vai ganhar títulos este ano?", b1: "Sim", b2: "Com Certeza" },
+    { q: "Aceita ser o amor da minha vida?", b1: "Sim", b2: "É CLARO QUE SIM" },
+    { q: "Quem ama mais?", b1: "Lucas", b2: "LUCAS" },
+    { q: "A gente vai se casar?", b1: "Sim", b2: "COM CERTEZA" },
     { q: "Aceita ser minha para sempre?", isFinal: true }
 ];
 let currentQ = 0;
@@ -365,7 +193,7 @@ function renderQuestion() {
     
     if (q.isFinal) {
         btnDiv.innerHTML = `
-            <button class="btn btn-success me-3 px-4 py-2 fs-5" onclick="alert('Eu também te amo infinitamente!')">Sim</button>
+            <button class="btn btn-success me-3 px-4 py-2 fs-5" onclick="alert('Eu também vou te amar para sempre!')">Sim</button>
             <button id="btn-no" class="btn btn-danger px-4 py-2 fs-5" style="position: relative;">Não</button>
         `;
         const btnNo = document.getElementById('btn-no');
@@ -373,7 +201,7 @@ function renderQuestion() {
         btnNo.addEventListener('touchstart', moveButton);
     } else {
         btnDiv.innerHTML = `
-            <button class="btn btn-primary me-3 px-4 py-2 fs-5" onclick="nextQuestion()">${q.b1}</button>
+            <button class="btn btn-primary px-4 py-2 fs-5" onclick="nextQuestion()">${q.b1}</button>
             <button class="btn btn-secondary px-4 py-2 fs-5" onclick="nextQuestion()">${q.b2}</button>
         `;
     }
@@ -393,8 +221,9 @@ function moveButton() {
     btnNo.style.top = Math.max(10, Math.floor(Math.random() * maxY)) + 'px';
     btnNo.style.zIndex = '9999';
 }
+renderQuestion();
 
-// ================= 9. COFRE SECRETO =================
+// ================= 5. COFRE SECRETO =================
 function checkPassword() {
     const pass = document.getElementById('vault-pass').value.trim();
     if(pass === '13/08') {
@@ -408,7 +237,7 @@ function checkPassword() {
     }
 }
 
-// ================= 10. MAPA MODAL & ERRO =================
+// ================= 6. MAPA MODAL & ERRO =================
 function updateModal(title, desc) {
     document.getElementById('modalTitle').innerText = title;
     document.getElementById('modalDesc').innerText = desc;
@@ -421,13 +250,13 @@ function closeWinError() {
     alert('Aviso ignorado. O amor continua a rodar em segundo plano.');
 }
 
-// ================= 11. PLAYLIST SPOTIFY =================
+// ================= 7. PLAYLIST SPOTIFY =================
 const playlist = [
     { title: "Star Shopping", artist: "Lil Peep", src: "star_shopping.mp3" },
     { title: "Nuts", artist: "Lil Peep", src: "nuts.mp3" },
     { title: "Save That Shit", artist: "Lil Peep", src: "save_that_shit.mp3" },
-    { title: "Yellow", artist: "Coldplay", src: "yellow.mp3" },
-    { title: "Nossa Mensagem", artist: "Lucas", src: "audio_secreto.mp3" }
+    { title: "TRACK04", artist: "ARTIST", src: "audio.mp3" },
+    { title: "TRACK05", artist: "ARTIST", src: "audio.mp3" }
 ];
 let currentTrack = 0;
 const audioEl = document.getElementById('audio-element');
@@ -493,7 +322,7 @@ function prevTrack() {
 loadTrack(0);
 if(audioEl) audioEl.addEventListener('ended', nextTrack);
 
-// ================= 12. CÁPSULA DO TEMPO =================
+// ================= 8. CÁPSULA DO TEMPO =================
 const capsuleDate = new Date(2026, 7, 13);
 const currentDate = new Date(); 
 const capsuleContent = document.getElementById('capsule-content');
@@ -504,12 +333,7 @@ if(capsuleContent && currentDate >= capsuleDate) {
     `;
 }
 
-// ================= 13. LETREIRO NEON =================
-function toggleNeon() {
-    document.body.classList.toggle('neon-active');
-}
-
-// ================= 14. QUADRO DE MISSÕES =================
+// ================= 9. QUADRO DE MISSÕES =================
 function completeQuest(btn) {
     const questCard = btn.closest('.quest-card');
     questCard.classList.add('completed');
@@ -518,18 +342,33 @@ function completeQuest(btn) {
     btn.classList.replace('btn-outline-dark', 'btn-success');
 }
 
-// ================= 15. CALENDÁRIO SEMANAL =================
+// ================= 10. AVALIAÇÃO DE SÉRIES =================
+function rateMedia(starElement, rating) {
+    const container = starElement.closest('.star-rating');
+    const stars = container.querySelectorAll('i');
+    stars.forEach((star, index) => {
+        if (index < rating) {
+            star.classList.replace('bi-star', 'bi-star-fill');
+            star.classList.add('active');
+        } else {
+            star.classList.replace('bi-star-fill', 'bi-star');
+            star.classList.remove('active');
+        }
+    });
+}
+
+// ================= 11. CALENDÁRIO SEMANAL =================
 const calendarGrid = document.getElementById('calendar-grid');
 if(calendarGrid) {
     const daysOfWeek = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
     const dailyMessages = [
-        "Até nos domingos de preguiça, tu és a minha paz.",
-        "Segunda é difícil, mas o teu sorriso muda tudo.",
-        "Terça com T de 'Te amo muito'.",
-        "Quarta-feira e eu já estou com saudades de te ver.",
-        "Quinta-feira: quase fim de semana para jogarmos juntos!",
-        "Sextou! O melhor dia para estarmos juntos.",
-        "Sábado perfeito é sempre ao teu lado."
+        "O melhor dia da semana, aquele que finalmente passo contigo",
+        "Segunda-feira é difícil, a saudade aperta demais e eu não consigo parar de pensar em você",
+        "Terça-feira ainda é longe do nosso próximo encontro, mas eu faço de tudo para que o dia passe rápido e eu possa te ver logo",
+        "Quarta-feira ainda não é o dia, mas ainda assim fico feliz por ter a melhor namorada desse mundo",
+        "Quinta-feira, quase fim de semana e logo a gente vai se ver!!!!!",
+        "Sextaaaaaa, falta só hoje!",
+        "Sábado, a gente finalmente vai se ver ❤️❤️❤️"
     ];
     const currentDay = new Date().getDay(); 
 
@@ -547,14 +386,14 @@ if(calendarGrid) {
             if(index === currentDay) {
                 door.classList.add('open');
             } else {
-                alert('Ei! Só pode abrir a porta do dia de hoje. A paciência é uma virtude! ❤️');
+                alert('Só pode abrir o dia de hoje kkkk');
             }
         });
         calendarGrid.appendChild(door);
     });
 }
 
-// ================= 16. QUEBRA-CABEÇAS DESLIZANTE =================
+// ================= 12. QUEBRA-CABEÇAS DESLIZANTE =================
 const puzzleBoard = document.getElementById('puzzle-board');
 if(puzzleBoard) {
     let tiles = [0, 1, 2, 3, 4, 5, 6, 7, 8];
@@ -626,7 +465,7 @@ if(puzzleBoard) {
     renderPuzzle();
 }
 
-// ================= 17. MÁQUINA POLAROID COM GATINHA =================
+// ================= 13. MÁQUINA POLAROID =================
 function takePolaroid() {
     const flash = document.getElementById('camera-flash');
     const polaroid = document.getElementById('polaroid-output');
@@ -642,7 +481,7 @@ function takePolaroid() {
     }, 150);
 }
 
-// ================= 18. EFEITO DE CHUVA "EU TE AMO" NO FUNDO =================
+// ================= 14. EFEITO DE CHUVA "EU TE AMO" NO FUNDO =================
 function startFloatingWords() {
     const wordsContainer = document.getElementById('floating-words-container');
     if (!wordsContainer) return;
@@ -664,4 +503,34 @@ function startFloatingWords() {
         
         setTimeout(() => word.remove(), 21000);
     }, 1000);
+}
+
+// ================= 15. TERMINAL NO FINAL (LINHA DE CÓDIGO) =================
+let terminalHasRun = false;
+function typeTerminal() {
+    if (terminalHasRun) return;
+    const termBody = document.getElementById('terminal-text');
+    if(!termBody) return;
+    
+    terminalHasRun = true;
+    let lineIndex = 0;
+    let charIndex = 0;
+
+    function typeChar() {
+        if (lineIndex < terminalLines.length) {
+            if (charIndex === 0) termBody.innerHTML += '<br>';
+            if (charIndex < terminalLines[lineIndex].length) {
+                termBody.innerHTML += terminalLines[lineIndex].charAt(charIndex);
+                charIndex++;
+                setTimeout(typeChar, Math.random() * 40 + 10);
+            } else {
+                lineIndex++;
+                charIndex = 0;
+                setTimeout(typeChar, 600);
+            }
+        } else {
+            termBody.innerHTML += '<span class="cursor"></span>'; 
+        }
+    }
+    typeChar();
 }

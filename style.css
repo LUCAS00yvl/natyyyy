@@ -10,6 +10,7 @@ html, body {
     margin: 0; padding: 0;
     max-width: 100%; 
     overflow-x: hidden; 
+    /* BACKGROUND PERSONALIZADO PRESERVADO */
     background: linear-gradient(to bottom, #0e0e0e 0%, #070707 15%, #000000 30%, #000000 100%);
     color: white; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
@@ -31,15 +32,19 @@ body { overflow-y: hidden; }
     display: flex;
     justify-content: center;
     align-items: center;
-    /* Transformação dura 0.8s (sincronizado com os frames). 
-       A opacidade tem um "delay" de 0.5s para só desaparecer no final do mergulho */
+    /* TRANSFORMAÇÃO E TEMPO PERSONALIZADO PRESERVADOS */
     transition: transform 1.0s ease-in, opacity 0.4s ease-out 0.5s;
 }
 
 #intro-animation-container.zoom-active {
-    transform: scale(15); /* Aumentei um pouco a escala para o mergulho ser mais profundo */
+    transform: scale(15); 
     opacity: 0;
     pointer-events: none;
+}
+
+/* Adicionado para transição suave de escala de cada frame individual no JS */
+#intro-frame {
+    transition: transform 0.08s linear;
 }
 
 /* ================= SCROLL ANIMAÇÕES ================= */
@@ -88,7 +93,7 @@ body { overflow-y: hidden; }
 }
 .polaroid-frame.show { transform: translate(-50%, -50%) scale(1) rotate(5deg) translateY(0); }
 
-/* ================= COMPONENTES ORIGINAIS ================= */
+/* ================= COMPONENTES RESTAURADOS E MANTIDOS ================= */
 .quest-board { background: #c19a6b; background-image: url('https://www.transparenttextures.com/patterns/cork-board.png'); border: 8px solid #5c4033; }
 .quest-card { background-color: #ffffe0; border-radius: 2px; font-family: 'Comic Sans MS', cursive, sans-serif; transform: rotate(-2deg); transition: transform 0.2s; }
 .quest-card:nth-child(even) { transform: rotate(3deg); }
@@ -97,7 +102,10 @@ body { overflow-y: hidden; }
 .quest-card.completed .quest-title { text-decoration: line-through; color: #777 !important; }
 .quest-card.completed::after { content: 'CONCLUÍDA'; position: absolute; top: 40%; left: 10%; color: rgba(255, 0, 0, 0.6); font-size: 1.5rem; font-weight: bold; border: 3px solid rgba(255, 0, 0, 0.6); padding: 5px; transform: rotate(-15deg); pointer-events: none; }
 
-.pie-chart { width: 150px; height: 150px; border-radius: 50%; background: conic-gradient(#ff4d4d 0% 99%, #457b9d 99% 100%); box-shadow: 0 5px 15px rgba(0,0,0,0.4); }
+.pie-chart { width: 150px; height: 150px; border-radius: 50%; background: conic-gradient(#ff4d4d 0% 75%, #457b9d 25% 100%); box-shadow: 0 5px 15px rgba(0,0,0,0.4); }
+
+.pie-chart2 { width: 150px; height: 150px; border-radius: 50%; background: conic-gradient(#ff4d4d 0% 25%, #457b9d 25% 50%, #137c1c 50% 100%); box-shadow: 0 5px 15px rgba(0,0,0,0.4); }
+
 
 .media-shelf { background: #3b2a1a; padding: 20px; border-radius: 8px; border-bottom: 15px solid #2a1b10; box-shadow: 0 10px 20px rgba(0,0,0,0.5); }
 .media-item { width: 150px; }
@@ -119,12 +127,6 @@ body { overflow-y: hidden; }
 .track-number { width: 30px; color: #b3b3b3; text-align: center; }
 .track-title { color: #fff; margin: 0; font-weight: 500; font-size: 0.95rem; }
 .track-artist { color: #b3b3b3; margin: 0; font-size: 0.8rem; }
-
-.envelope { width: 100%; max-width: 250px; height: 180px; background: #f8f9fa; border-bottom-left-radius: 10px; border-bottom-right-radius: 10px; position: relative; margin: 0 auto; transition: transform 0.5s; cursor: pointer; }
-.envelope::before { content: ''; position: absolute; top: 0; left: 0; right: 0; border-top: 90px solid #dee2e6; border-left: 125px solid transparent; border-right: 125px solid transparent; z-index: 3; transition: transform 0.5s; transform-origin: top; }
-.envelope:hover::before { transform: rotateX(180deg); z-index: 1; }
-.letter { position: absolute; bottom: 0; width: 90%; height: 80%; background: #fff; left: 5%; transition: transform 0.5s; z-index: 2; padding: 15px; color: #333; font-size: 14px; box-shadow: 0 2px 5px rgba(0,0,0,0.2); border-radius: 5px; display: flex; align-items: center; justify-content: center; }
-.envelope:hover .letter { transform: translateY(-60px); z-index: 4; }
 
 .whatsapp-container { background-color: #efeae2; border-radius: 15px; padding: 20px; max-width: 600px; margin: 0 auto; background-image: url('https://user-images.githubusercontent.com/15075759/28719144-86dc0f70-73b1-11e7-911d-60d70fcded21.png'); }
 .msg-bubble { padding: 10px 15px; border-radius: 15px; margin-bottom: 10px; max-width: 75%; font-size: 0.95rem; color: #000; }
@@ -205,16 +207,7 @@ body { overflow-y: hidden; }
 .win-close-btn { background: #c0c0c0; border: 1px solid #fff; border-bottom-color: #000; border-right-color: #000; color: black; font-size: 12px; width: 20px; height: 20px; text-align: center; cursor: pointer; }
 .win-content { padding: 20px; }
 
-.heart { position: relative; width: 100px; height: 90px; animation: pulse 1.2s infinite; margin: 0 auto; }
-.heart::before, .heart::after { content: ""; position: absolute; top: 0; width: 50px; height: 80px; border-radius: 50px 50px 0 0; background: #ff4d4d; }
-.heart::before { left: 50px; transform: rotate(-45deg); transform-origin: 0 100%; }
-.heart::after { left: 0; transform: rotate(45deg); transform-origin: 100% 100%; }
-
-@keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.15); } 100% { transform: scale(1); } }
-@keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(10px); } }
-@keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
-
-.block-game-wrapper { min-height: 350px; display: flex; align-items: center; justify-content: center; }
+/* Block Blast Realista */
 .block-blast-grid { display: grid; gap: 2px; background: #1a1a1a; padding: 10px; border-radius: 8px; transition: opacity 0.5s; box-shadow: 0 0 20px rgba(0,0,0,0.8); }
 .game-block { width: 100%; height: 100%; border-radius: 4px; cursor: pointer; transition: transform 0.1s, opacity 0.3s; box-shadow: inset 2px 2px 5px rgba(255,255,255,0.3), inset -2px -2px 5px rgba(0,0,0,0.3); }
 .game-block:hover { transform: scale(0.9); }
@@ -226,54 +219,6 @@ body { overflow-y: hidden; }
 .player-controls { display: flex; align-items: center; }
 .btn-player { background: transparent; border: none; color: white; font-size: 1.2rem; margin: 0 5px; cursor: pointer; transition: color 0.2s; padding: 0; }
 .btn-player:hover { color: #1db954; }
-
-.parallax-ghibli { background-image: url('https://via.placeholder.com/1920x1080/000033/ffffff?text=Fundo+Noite+Estrelada+Aqui'); background-attachment: fixed; background-position: center; background-repeat: no-repeat; background-size: cover; border-radius: 12px; box-shadow: inset 0 0 50px rgba(0,0,0,0.8); }
-.ghibli-content { background-color: rgba(0, 0, 0, 0.4); border-radius: 12px; }
-.text-shadow-strong { text-shadow: 2px 2px 5px rgba(0,0,0,1); }
-.ghibli-frame { width: 250px; height: 350px; background: #fff; padding: 10px 10px 40px 10px; box-shadow: 5px 5px 15px rgba(0,0,0,0.6); transform: rotate(-3deg); transition: transform 0.3s; }
-.ghibli-frame:nth-child(2) { transform: rotate(4deg); }
-.ghibli-frame:hover { transform: scale(1.05) rotate(0deg); z-index: 10; }
-.ghibli-placeholder { width: 100%; height: 100%; background: #333; display: flex; align-items: center; justify-content: center; color: #888; border: 1px solid #ddd; }
-
-/* Letreiro Neon */
-.dark-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100vh; background: rgba(0,0,0,0.85); z-index: 1; pointer-events: none; opacity: 0; transition: opacity 0.5s; }
-body.neon-active .dark-overlay { opacity: 1; }
-.neon-section { position: relative; z-index: 2; border: 1px solid #333; transition: border-color 0.5s; }
-body.neon-active .neon-section { border-color: #ff4d4d; }
-.neon-off { color: #444; text-shadow: none; transition: 0.3s; }
-body.neon-active .neon-off { color: #fff; text-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 20px #ff4d4d, 0 0 40px #ff4d4d, 0 0 80px #ff4d4d; }
-
-/* Cartaz Velho Oeste */
-.wanted-poster { background: #d4c391; border: 8px solid #3b2a1a; padding: 20px; border-radius: 4px; box-shadow: 2px 2px 10px rgba(0,0,0,0.5); font-family: 'Times New Roman', Times, serif; }
-.wanted-title { font-size: 3.5rem; font-weight: 900; color: #3b2a1a; margin-bottom: -10px; letter-spacing: 5px; }
-.wanted-subtitle { font-size: 1.5rem; font-weight: bold; color: #3b2a1a; letter-spacing: 2px; }
-.wanted-image { width: 200px; height: 200px; margin: 0 auto; border: 4px solid #3b2a1a; background: #e8dcb3; display: flex; align-items: center; justify-content: center; }
-
-/* Caça-Níquel Realista */
-.slot-machine-container { background: #b00b0b; padding: 20px; border-radius: 15px; border: 5px solid #800000; box-shadow: inset 0 0 20px rgba(0,0,0,0.8), 0 10px 20px rgba(0,0,0,0.5); display: inline-block; position: relative; }
-.slot-machine { display: flex; gap: 15px; background: #111; padding: 20px; border-radius: 12px; border: 3px solid #ffc107; display: inline-flex; }
-.slot { width: 80px; height: 100px; background: #fff; border: 4px inset #555; border-radius: 8px; overflow: hidden; display: flex; justify-content: center; align-items: center; font-size: 3.5rem; background: linear-gradient(#ccc, #fff, #ccc); box-shadow: inset 0 5px 10px rgba(0,0,0,0.5); }
-.slot-reel { transition: transform 0.1s; }
-.slot-handle { position: absolute; right: -30px; top: 50%; width: 20px; height: 80px; background: #888; border-radius: 10px; transform: translateY(-50%); box-shadow: inset 2px 2px 5px #fff, inset -2px -2px 5px #000; }
-.slot-handle::before { content: ''; position: absolute; top: -15px; left: -5px; width: 30px; height: 30px; background: #ff4d4d; border-radius: 50%; box-shadow: inset 2px 2px 5px #fff; }
-
-/* Cyberpunk Terminal */
-.cyber-hack-container { background: #0a0a0c; border: 2px solid #ff003c; border-top: 15px solid #ff003c; }
-.cyber-font { font-family: monospace; letter-spacing: 1px; }
-.cyber-title { font-family: monospace; letter-spacing: 2px; }
-.cyber-grid { display: grid; gap: 8px; justify-content: center; }
-.cyber-cell { display: flex; align-items: center; justify-content: center; font-family: monospace; font-size: 1.2rem; color: #ff003c; border: 1px solid #333; cursor: pointer; transition: all 0.2s; background: rgba(255,0,60,0.05); }
-.cyber-cell:hover { background: rgba(255,0,60,0.3); }
-.cyber-cell.cyber-active { background: #ff003c; color: #000; border-color: #ff003c; pointer-events: none; }
-.cyber-buffer { width: 50px; height: 50px; border: 2px solid #555; display: flex; align-items: center; justify-content: center; font-family: monospace; font-size: 1.2rem; color: #fff; background: #111; }
-.cyber-buffer.filled { border-color: #00ff00; color: #00ff00; }
-
-/* Caça aos Tesouros (Corações) */
-.hidden-heart { position: absolute; color: rgba(255, 255, 255, 0.1); cursor: pointer; font-size: 1.5rem; transition: all 0.3s; z-index: 50; }
-.hidden-heart.found { color: #ff4d4d; opacity: 1; text-shadow: 0 0 10px #ff4d4d; cursor: default; pointer-events: none; transform: scale(1.3); }
-.treasure-hud { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,0.8); border: 1px solid #ff4d4d; color: #fff; padding: 10px 20px; border-radius: 20px; z-index: 9998; font-weight: bold; opacity: 0; pointer-events: none; transition: opacity 0.3s; }
-.treasure-hud.visible { opacity: 1; }
-#fireworks-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100vh; pointer-events: none; z-index: -1; }
 
 /* Calendário Semanal */
 .calendar-grid { display: flex; gap: 15px; flex-wrap: wrap; justify-content: center; max-width: 700px; }
@@ -287,28 +232,20 @@ body.neon-active .neon-off { color: #fff; text-shadow: 0 0 5px #fff, 0 0 10px #f
 
 /* Quebra-Cabeças Deslizante */
 .puzzle-board { display: grid; border: 4px solid #fff; box-shadow: 0 10px 20px rgba(0,0,0,0.6); background: #111; gap: 2px; }
-.puzzle-piece { width: 100%; height: 100%; background-image: url('https://via.placeholder.com/600x600/e63946/ffffff?text=Nossa+Foto'); background-size: 300% 300%; cursor: pointer; transition: transform 0.1s; }
+.puzzle-piece { width: 100%; height: 100%; background-image: url('img/'); background-size: 300% 300%; cursor: pointer; transition: transform 0.1s; }
 .puzzle-empty { background: transparent !important; cursor: default; border: 1px dashed #444; }
 
 
 /* ================= MEDIA QUERIES PARA COMPUTADOR (DESKTOP) ================= */
 @media (min-width: 768px) {
     .mc-inventory { grid-template-columns: repeat(6, 80px); }
-    .block-game-wrapper { min-height: 450px; }
     .block-blast-grid { grid-template-columns: repeat(8, 45px); grid-template-rows: repeat(8, 45px); }
-    .slot { width: 100px; height: 130px; font-size: 4.5rem; }
-    .cyber-grid { grid-template-columns: repeat(5, 60px); gap: 10px; }
-    .cyber-cell { width: 60px; height: 60px; font-size: 1.5rem; }
     .puzzle-board { width: 450px; height: 450px; grid-template-columns: repeat(3, 148px); grid-template-rows: repeat(3, 148px); }
 }
 
 @media (max-width: 767px) {
     .floating-player { width: 90%; right: 5%; bottom: 10px; padding: 10px 15px; }
     .mc-inventory { grid-template-columns: repeat(3, 80px); }
-    .block-game-wrapper { min-height: 350px; }
     .block-blast-grid { grid-template-columns: repeat(8, 35px); grid-template-rows: repeat(8, 35px); }
-    .slot { width: 80px; height: 100px; font-size: 3.5rem; }
-    .cyber-grid { grid-template-columns: repeat(5, 50px); gap: 8px; }
-    .cyber-cell { width: 50px; height: 50px; font-size: 1.2rem; }
     .puzzle-board { width: 300px; height: 300px; grid-template-columns: repeat(3, 98px); grid-template-rows: repeat(3, 98px); }
 }
