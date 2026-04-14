@@ -83,6 +83,7 @@ window.addEventListener('touchstart', handleInteraction, { passive: false });
 window.addEventListener('keydown', handleInteraction, { passive: false });
 window.addEventListener('click', handleInteraction);
 
+
 // ================= 2. ANIMAÇÕES DE SCROLL =================
 let windowErrorShown = false;
 const obs = new IntersectionObserver((entries) => {
@@ -90,11 +91,13 @@ const obs = new IntersectionObserver((entries) => {
         if(entry.isIntersecting) {
             entry.target.classList.add('visible');
             
+            // Dispara o erro do Windows ao chegar perto do fim
             if(entry.target.id === 'final-heart-section' && !windowErrorShown) {
                 setTimeout(showWindowsError, 1000);
                 windowErrorShown = true;
             }
-            // Para o terminal rodar quando chegar à última secção
+            
+            // Para o terminal rodar apenas quando chegar à última secção
             if(entry.target.querySelector('.terminal-body')) {
                 if(typeof typeTerminal === 'function') typeTerminal(); 
             }
@@ -103,6 +106,7 @@ const obs = new IntersectionObserver((entries) => {
     });
 }, { threshold: 0.1 });
 document.querySelectorAll('.fade-in-section').forEach(s => obs.observe(s));
+
 
 // ================= 3. CONTADOR DE TEMPO =================
 function updateCounter() {
@@ -125,7 +129,7 @@ function updateCounter() {
 
     let text = "";
     if (years > 0) text += `${years} ano${years > 1 ? 's' : ''}, `;
-    if (months > 0 || years > 0) text += `${months} mês${months !== 1 ? 'es' : ''} e `;
+    if (months > 0 || years > 0) text += `${months} mes${months !== 1 ? 'es' : ''} e `;
     text += `${days} dia${days !== 1 ? 's' : ''}`;
 
     const counterEl = document.getElementById('love-counter');
@@ -134,45 +138,6 @@ function updateCounter() {
 setInterval(updateCounter, 1000);
 updateCounter();
 
-
-// ================= 4. BLOCK BLAST & QUIZ EMPILHADOS =================
-const gameGrid = document.getElementById('game-grid');
-if(gameGrid) {
-    const colors = ['#e63946', '#457b9d', '#2a9d8f', '#e9c46a'];
-    const gridSize = 8;
-    const totalBlocks = gridSize * gridSize; 
-    let blocksState = Array(totalBlocks).fill(true); 
-    
-    for (let i = 0; i < totalBlocks; i++) {
-        const block = document.createElement('div');
-        block.classList.add('game-block');
-        block.dataset.index = i;
-        block.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
-        
-        block.addEventListener('click', function() {
-            if (!blocksState[i]) return;
-            
-            const row = Math.floor(i / gridSize);
-            const col = i % gridSize;
-            const toDestroy = [
-                i, 
-                (row > 0) ? i - gridSize : -1, 
-                (row < gridSize - 1) ? i + gridSize : -1, 
-                (col > 0) ? i - 1 : -1, 
-                (col < gridSize - 1) ? i + 1 : -1 
-            ];
-
-            toDestroy.forEach(idx => {
-                if (idx >= 0 && idx < totalBlocks && blocksState[idx]) {
-                    blocksState[idx] = false;
-                    const b = gameGrid.querySelector(`[data-index='${idx}']`);
-                    b.classList.add('popped');
-                }
-            });
-        });
-        gameGrid.appendChild(block);
-    }
-}
 
 // QUIZ
 const quizQuestions = [
@@ -223,6 +188,7 @@ function moveButton() {
 }
 renderQuestion();
 
+
 // ================= 5. COFRE SECRETO =================
 function checkPassword() {
     const pass = document.getElementById('vault-pass').value.trim();
@@ -237,6 +203,7 @@ function checkPassword() {
     }
 }
 
+
 // ================= 6. MAPA MODAL & ERRO =================
 function updateModal(title, desc) {
     document.getElementById('modalTitle').innerText = title;
@@ -250,13 +217,15 @@ function closeWinError() {
     alert('Aviso ignorado. O amor continua a rodar em segundo plano.');
 }
 
+
 // ================= 7. PLAYLIST SPOTIFY =================
 const playlist = [
-    { title: "Star Shopping", artist: "Lil Peep", src: "star_shopping.mp3" },
-    { title: "Nuts", artist: "Lil Peep", src: "nuts.mp3" },
-    { title: "Save That Shit", artist: "Lil Peep", src: "save_that_shit.mp3" },
-    { title: "TRACK04", artist: "ARTIST", src: "audio.mp3" },
-    { title: "TRACK05", artist: "ARTIST", src: "audio.mp3" }
+    { title: "nuts", artist: "Lil Peep", src: "" },
+    { title: "gym class", artist: "Lil Peep", src: "" },
+    { title: "Save That Shit", artist: "Lil Peep", src: "" },
+    { title: "white tee", artist: "Lil Peep", src: "" },
+    { title: "witchblades", artist: "Lil Peep", src: "" },
+    { title: "benz truck", artist: "Lil Peep", src: "" }
 ];
 let currentTrack = 0;
 const audioEl = document.getElementById('audio-element');
@@ -322,6 +291,7 @@ function prevTrack() {
 loadTrack(0);
 if(audioEl) audioEl.addEventListener('ended', nextTrack);
 
+
 // ================= 8. CÁPSULA DO TEMPO =================
 const capsuleDate = new Date(2026, 7, 13);
 const currentDate = new Date(); 
@@ -333,14 +303,16 @@ if(capsuleContent && currentDate >= capsuleDate) {
     `;
 }
 
+
 // ================= 9. QUADRO DE MISSÕES =================
 function completeQuest(btn) {
     const questCard = btn.closest('.quest-card');
     questCard.classList.add('completed');
-    btn.innerText = 'Missão Cumprida!';
+    btn.innerText = 'Meta Cumprida!';
     btn.disabled = true;
     btn.classList.replace('btn-outline-dark', 'btn-success');
 }
+
 
 // ================= 10. AVALIAÇÃO DE SÉRIES =================
 function rateMedia(starElement, rating) {
@@ -357,16 +329,17 @@ function rateMedia(starElement, rating) {
     });
 }
 
+
 // ================= 11. CALENDÁRIO SEMANAL =================
 const calendarGrid = document.getElementById('calendar-grid');
 if(calendarGrid) {
     const daysOfWeek = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
     const dailyMessages = [
         "O melhor dia da semana, aquele que finalmente passo contigo",
-        "Segunda-feira é difícil, a saudade aperta demais e eu não consigo parar de pensar em você",
-        "Terça-feira ainda é longe do nosso próximo encontro, mas eu faço de tudo para que o dia passe rápido e eu possa te ver logo",
-        "Quarta-feira ainda não é o dia, mas ainda assim fico feliz por ter a melhor namorada desse mundo",
-        "Quinta-feira, quase fim de semana e logo a gente vai se ver!!!!!",
+        "A saudade aperta demais e eu não consigo parar de pensar em você",
+        "Longe do nosso próximo encontro, mas eu faço de tudo para que o dia passe rápido e eu possa te ver logo",
+        "Ainda não é o dia, mas ainda assim fico feliz por ter a melhor namorada desse mundo",
+        "Quase fim de semana e logo a gente vai se ver!!!!!",
         "Sextaaaaaa, falta só hoje!",
         "Sábado, a gente finalmente vai se ver ❤️❤️❤️"
     ];
@@ -392,6 +365,7 @@ if(calendarGrid) {
         calendarGrid.appendChild(door);
     });
 }
+
 
 // ================= 12. QUEBRA-CABEÇAS DESLIZANTE =================
 const puzzleBoard = document.getElementById('puzzle-board');
@@ -465,6 +439,7 @@ if(puzzleBoard) {
     renderPuzzle();
 }
 
+
 // ================= 13. MÁQUINA POLAROID =================
 function takePolaroid() {
     const flash = document.getElementById('camera-flash');
@@ -480,6 +455,7 @@ function takePolaroid() {
         }, 300);
     }, 150);
 }
+
 
 // ================= 14. EFEITO DE CHUVA "EU TE AMO" NO FUNDO =================
 function startFloatingWords() {
@@ -505,32 +481,3 @@ function startFloatingWords() {
     }, 1000);
 }
 
-// ================= 15. TERMINAL NO FINAL (LINHA DE CÓDIGO) =================
-let terminalHasRun = false;
-function typeTerminal() {
-    if (terminalHasRun) return;
-    const termBody = document.getElementById('terminal-text');
-    if(!termBody) return;
-    
-    terminalHasRun = true;
-    let lineIndex = 0;
-    let charIndex = 0;
-
-    function typeChar() {
-        if (lineIndex < terminalLines.length) {
-            if (charIndex === 0) termBody.innerHTML += '<br>';
-            if (charIndex < terminalLines[lineIndex].length) {
-                termBody.innerHTML += terminalLines[lineIndex].charAt(charIndex);
-                charIndex++;
-                setTimeout(typeChar, Math.random() * 40 + 10);
-            } else {
-                lineIndex++;
-                charIndex = 0;
-                setTimeout(typeChar, 600);
-            }
-        } else {
-            termBody.innerHTML += '<span class="cursor"></span>'; 
-        }
-    }
-    typeChar();
-}
